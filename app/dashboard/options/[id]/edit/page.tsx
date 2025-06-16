@@ -2,7 +2,6 @@
 import { getOptionById } from "@/app/actions/options";
 import { OptionForm } from "@/components/option-form"; // Assurez-vous que ce chemin est correct
 import { notFound } from "next/navigation";
-import { toast } from "sonner";
 
 interface EditOptionPageProps {
   params: {
@@ -17,12 +16,9 @@ export default async function EditOptionPage({ params }: EditOptionPageProps) {
     notFound(); // Si l'ID n'est pas un nombre valide, affiche une page 404
   }
 
-  const { data: option, error, success } = await getOptionById(idoption);
+  const { data: option, success } = await getOptionById(idoption);
 
   if (!success || !option) {
-    toast.error(
-      error || "Option non trouvée ou erreur lors de la récupération."
-    );
     notFound(); // Affiche la page 404 si l'option n'existe pas
   }
 

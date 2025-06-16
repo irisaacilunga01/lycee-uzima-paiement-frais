@@ -19,7 +19,7 @@ export default async function EditFraisPage({ params }: EditFraisPageProps) {
   }
 
   // Récupérer le frais spécifique
-  const { data: frais, error, success } = await getFraisById(idfrais);
+  const { data: frais, success } = await getFraisById(idfrais);
 
   // Récupérer la liste des années scolaires pour le sélecteur
   const {
@@ -29,7 +29,6 @@ export default async function EditFraisPage({ params }: EditFraisPageProps) {
   } = await getAnneescolaires();
 
   if (!success || !frais) {
-    toast.error(error || "Frais non trouvé ou erreur lors de la récupération.");
     notFound(); // Affiche la page 404 si le frais n'existe pas
   }
 

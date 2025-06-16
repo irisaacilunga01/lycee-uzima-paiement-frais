@@ -19,7 +19,7 @@ export default async function EditClassePage({ params }: EditClassePageProps) {
   }
 
   // Récupérer la classe spécifique
-  const { data: classe, error, success } = await getClasseById(idclasse);
+  const { data: classe, success } = await getClasseById(idclasse);
 
   // Récupérer la liste des options pour le sélecteur
   const {
@@ -29,9 +29,6 @@ export default async function EditClassePage({ params }: EditClassePageProps) {
   } = await getOptions();
 
   if (!success || !classe) {
-    toast.error(
-      error || "Classe non trouvée ou erreur lors de la récupération."
-    );
     notFound(); // Affiche la page 404 si la classe n'existe pas
   }
 

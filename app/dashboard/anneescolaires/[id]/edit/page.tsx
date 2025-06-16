@@ -2,7 +2,6 @@
 import { getAnneescolaireById } from "@/app/actions/anneescolaire";
 import { AnneescolaireForm } from "@/components/anneescolaire-form"; // Assurez-vous que ce chemin est correct
 import { notFound } from "next/navigation";
-import { toast } from "sonner";
 
 interface EditAnneescolairePageProps {
   params: {
@@ -19,16 +18,11 @@ export default async function EditAnneescolairePage({
     notFound(); // Si l'ID n'est pas un nombre valide, affiche une page 404
   }
 
-  const {
-    data: anneescolaire,
-    error,
-    success,
-  } = await getAnneescolaireById(idanneescolaire);
+  const { data: anneescolaire, success } = await getAnneescolaireById(
+    idanneescolaire
+  );
 
   if (!success || !anneescolaire) {
-    toast.error(
-      error || "Année scolaire non trouvée ou erreur lors de la récupération."
-    );
     notFound(); // Affiche la page 404 si l'année scolaire n'existe pas
   }
 
