@@ -40,7 +40,7 @@ const eleveFormSchema = z.object({
   postnom: z.string().min(2, {
     message: "Le postnom est requis et doit contenir au moins 2 caractères.",
   }),
-  prenom: z.string().optional().nullable(),
+  prenom: z.string().optional(),
   datenaissance: z
     .string()
     .regex(
@@ -49,27 +49,17 @@ const eleveFormSchema = z.object({
     )
     .optional()
     .or(z.literal("")),
-  lieunaissance: z.string().optional().nullable(),
-  adresse: z.string().optional().nullable(),
-  moyentransport: z.string().optional().nullable(),
+  lieunaissance: z.string().optional(),
+  adresse: z.string().optional(),
+  moyentransport: z.string().optional(),
   status: z.enum(["en cours", "terminé", "suspendu", "renvoyé"], {
     required_error: "Le statut est requis.",
   }),
-  idparent: z.preprocess(
-    // Pré-processus pour convertir la chaîne vide/null_parent_id en null
-    (val) => {
-      if (
-        val === null ||
-        val === undefined ||
-        val === "" ||
-        val === "null_parent_id"
-      ) {
-        return null;
-      }
-      return Number(val);
-    },
-    z.number().nullable().optional() // idparent peut être un nombre ou null
-  ),
+  idparent: z.coerce
+    .number({
+      required_error: "selectionner un présentateur !!",
+    })
+    .optional(),
   photoFile: z.instanceof(File).optional(), // Pour le nouvel upload de fichier
   deleteExistingPhoto: z.boolean().optional(), // Pour indiquer si la photo existante doit être supprimée
 });
@@ -99,10 +89,7 @@ export function EleveForm({ initialData, parents }: EleveFormProps) {
       adresse: initialData?.adresse || "",
       moyentransport: initialData?.moyentransport || "",
       status: initialData?.status || "en cours",
-      idparent:
-        initialData?.idparent !== undefined && initialData.idparent !== null
-          ? String(initialData.idparent)
-          : "null_parent_id", // Utilisez notre marqueur pour null
+      idparent: Number(initialData?.idparent), // Utilisez notre marqueur pour null
       photoFile: undefined, // Initialisé à undefined
       deleteExistingPhoto: false, // Par défaut, ne pas supprimer la photo
     },
@@ -146,13 +133,6 @@ export function EleveForm({ initialData, parents }: EleveFormProps) {
           (dataToSave as any)[key] = null;
         }
       });
-      // Spécifiquement pour idparent qui vient de Zod comme number | null
-      if (dataToSave.idparent === "null_parent_id") {
-        dataToSave.idparent = null;
-      }
-      if (dataToSave.datenaissance === "") {
-        dataToSave.datenaissance = null;
-      }
 
       if (initialData) {
         // Mode édition

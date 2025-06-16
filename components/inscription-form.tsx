@@ -31,18 +31,18 @@ import React from "react";
 
 // Schéma de validation pour les données de l'inscription
 const inscriptionFormSchema = z.object({
-  ideleve: z.preprocess(
-    (val) => Number(val),
-    z.number({ required_error: "L'élève est requis." })
-  ),
-  idclasse: z.preprocess(
-    (val) => Number(val),
-    z.number({ required_error: "La classe est requise." })
-  ),
-  idanneescolaire: z.preprocess(
-    (val) => Number(val),
-    z.number({ required_error: "L'année scolaire est requise." })
-  ),
+  ideleve: z.coerce.number({
+    required_error: "L'élève est requis.",
+  }),
+
+  idclasse: z.coerce.number({
+    required_error: "La classe est requise.",
+  }),
+
+  idanneescolaire: z.coerce.number({
+    required_error: "L'année scolaire est requise.",
+  }),
+
   // dateinscription n'est pas un champ de formulaire car il est DEFAULT NOW()
 });
 

@@ -36,22 +36,10 @@ const classeFormSchema = z.object({
     message:
       "Le nom de la classe est requis et doit contenir au moins 2 caractères.",
   }),
-  niveau: z.string().optional().nullable(),
-  idoption: z.preprocess(
-    // Pré-processus pour convertir la chaîne vide/null_option_id en null
-    (val) => {
-      if (
-        val === null ||
-        val === undefined ||
-        val === "" ||
-        val === "null_option_id"
-      ) {
-        return null;
-      }
-      return Number(val);
-    },
-    z.number({ required_error: "L'option est requise." }) // idoption est requis ici
-  ),
+  niveau: z.string().optional(),
+  idoption: z.coerce.number({
+    message: "L'option est requise.",
+  }),
 });
 
 type ClasseFormValues = z.infer<typeof classeFormSchema>;
@@ -70,10 +58,7 @@ export function ClasseForm({ initialData, options }: ClasseFormProps) {
     defaultValues: {
       nomclasse: initialData?.nomclasse || "",
       niveau: initialData?.niveau || "",
-      idoption:
-        initialData?.idoption !== undefined && initialData.idoption !== null
-          ? String(initialData.idoption)
-          : "null_option_id", // Utilisez notre marqueur pour null
+      idoption: Number(initialData?.idoption),
     },
   });
 
@@ -84,17 +69,6 @@ export function ClasseForm({ initialData, options }: ClasseFormProps) {
       let result;
       // Nettoyez les champs optionnels vides avant d'envoyer à Supabase
       const dataToSave = { ...values };
-
-      // Gérer spécifiquement idoption qui vient de Zod comme number | null
-      if (dataToSave.idoption === "null_option_id") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (dataToSave.idoption as any) = null; // Zod va déjà transformer en number | null
-      }
-      if (dataToSave.niveau === "") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (dataToSave.niveau as any) = null;
-      }
-
       if (initialData) {
         // Mode édition
         result = await updateClasse(

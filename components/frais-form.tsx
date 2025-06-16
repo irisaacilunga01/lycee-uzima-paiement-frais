@@ -37,13 +37,13 @@ const fraisFormSchema = z.object({
     message:
       "La description est requise et doit contenir au moins 5 caractères.",
   }),
-  montanttotal: z.preprocess(
-    (val) => Number(val),
-    z
-      .number({ invalid_type_error: "Le montant total doit être un nombre." })
-      .min(0.01, { message: "Le montant total doit être positif." })
-      .transform((num) => parseFloat(num.toFixed(2))) // S'assure que le nombre a deux décimales
-  ),
+  montanttotal: z.coerce
+    .number({
+      invalid_type_error: "Le montant total doit être un nombre.",
+      message: "Le montant total doit être positif.",
+    })
+    .min(0.01, { message: "Le montant total doit être positif." })
+    .transform((num) => parseFloat(num.toFixed(2))),
   dateecheance: z
     .string()
     .regex(
@@ -52,21 +52,11 @@ const fraisFormSchema = z.object({
     )
     .optional()
     .or(z.literal("")),
-  idanneescolaire: z.preprocess(
-    // Pré-processus pour convertir la chaîne vide/null_anneescolaire_id en null
-    (val) => {
-      if (
-        val === null ||
-        val === undefined ||
-        val === "" ||
-        val === "null_anneescolaire_id"
-      ) {
-        return null;
-      }
-      return Number(val);
-    },
-    z.number().nullable().optional() // idanneescolaire peut être un nombre ou null
-  ),
+  idanneescolaire: z.coerce
+    .number({
+      required_error: "selectionner une année scolaire !!",
+    })
+    .optional(),
 });
 
 type FraisFormValues = z.infer<typeof fraisFormSchema>;
@@ -85,11 +75,7 @@ export function FraisForm({ initialData, anneescolaires }: FraisFormProps) {
       description: initialData?.description || "",
       montanttotal: initialData?.montanttotal || 0,
       dateecheance: initialData?.dateecheance || "",
-      idanneescolaire:
-        initialData?.idanneescolaire !== undefined &&
-        initialData.idanneescolaire !== null
-          ? String(initialData.idanneescolaire)
-          : "null_anneescolaire_id", // Utilisez notre marqueur pour null
+      idanneescolaire: Number(initialData?.idanneescolaire),
     },
   });
 
@@ -98,16 +84,6 @@ export function FraisForm({ initialData, anneescolaires }: FraisFormProps) {
     try {
       let result;
       const dataToSave = { ...values };
-
-      // Nettoyez les champs optionnels vides ou marqueurs "null" avant d'envoyer à Supabase
-      if (dataToSave.dateecheance === "") {
-        dataToSave.dateecheance = null;
-      }
-      if (dataToSave.idanneescolaire === "null_anneescolaire_id") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (dataToSave.idanneescolaire as any) = null;
-      }
-
       if (initialData) {
         // Mode édition
         result = await updateFrais(

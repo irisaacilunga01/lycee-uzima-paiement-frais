@@ -198,7 +198,7 @@ export function DashboardChart({ initialChartData }: DashboardChartProps) {
                         new Intl.NumberFormat("fr-FR", {
                           style: "currency",
                           currency: "CDF",
-                        }).format(value),
+                        }).format(Number(value)),
                         "Montant total",
                       ];
                     }

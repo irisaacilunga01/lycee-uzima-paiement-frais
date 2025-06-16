@@ -39,28 +39,9 @@ const notificationFormSchema = z.object({
   message: z.string().min(5, {
     message: "Le message est requis et doit contenir au moins 5 caractères.",
   }),
-  idparent: z
-    .string() // Le champ arrive du formulaire toujours comme une chaîne de caractères
-    .nullable() // Accepte explicitement `null` si le `defaultValue` est `null` ou la valeur du Select
-    .optional() // Permet au champ d'être `undefined` si non fourni initialement
-    .transform((val, ctx) => {
-      // Si la valeur est null, undefined, ou notre marqueur pour "aucun parent", la convertir en null
-      if (val === null || val === undefined || val === "null_parent_id") {
-        return null;
-      }
-      // Tenter de convertir la chaîne en nombre
-      const num = Number(val);
-      // Si la conversion échoue (pas un nombre valide), ajouter une erreur Zod
-      if (isNaN(num)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "L'ID du parent doit être un nombre valide ou vide.",
-        });
-        return z.NEVER; // Indique que la validation a échoué et arrête le processus
-      }
-      return num;
-    })
-    .pipe(z.number().nullable()), // S'assure que le type final est `number | null`
+  idparent: z.coerce.number({
+    message: "selectionner un parent !!!",
+  }),
 });
 
 type NotificationFormValues = z.infer<typeof notificationFormSchema>;
@@ -81,10 +62,7 @@ export function NotificationForm({
     defaultValues: {
       message: initialData?.message || "",
       // Assure que `idparent` est converti en chaîne ou en "null_parent_id" pour le Select
-      idparent:
-        initialData?.idparent !== undefined && initialData.idparent !== null
-          ? String(initialData.idparent) // Convertit le numéro en string
-          : "null_parent_id", // Utilise notre marqueur pour null au lieu de ""
+      idparent: Number(initialData?.idparent),
     },
   });
 

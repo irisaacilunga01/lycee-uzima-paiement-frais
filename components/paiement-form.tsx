@@ -31,50 +31,17 @@ import { Loader2Icon } from "lucide-react";
 import React from "react";
 // Schéma de validation pour les données du paiement
 const paiementFormSchema = z.object({
-  montantpayer: z.preprocess(
-    (val) => Number(val),
-    z
-      .number({ invalid_type_error: "Le montant à payer doit être un nombre." })
-      .min(0.01, { message: "Le montant à payer doit être positif." })
-      .transform((num) => parseFloat(num.toFixed(2))) // S'assure que le nombre a deux décimales
-  ),
-  status: z
-    .enum(["pending", "processing", "success", "failed"], {
-      required_error: "Le statut est requis.",
-    })
-    .default("pending"), // Définit un statut par défaut pour le formulaire
+  montantpayer: z.coerce.number({
+    invalid_type_error: "Le montant à payer doit être un nombre.",
+    message: "Le montant à payer doit être positif.",
+  }),
 
-  ideleve: z.preprocess(
-    // Pré-processus pour convertir la chaîne vide/null_eleve_id en null
-    (val) => {
-      if (
-        val === null ||
-        val === undefined ||
-        val === "" ||
-        val === "null_eleve_id"
-      ) {
-        return null;
-      }
-      return Number(val);
-    },
-    z.number().nullable().optional() // ideleve peut être un nombre ou null
-  ),
-  idfrais: z.preprocess(
-    // Pré-processus pour convertir la chaîne vide/null_frais_id en null
-    (val) => {
-      if (
-        val === null ||
-        val === undefined ||
-        val === "" ||
-        val === "null_frais_id"
-      ) {
-        return null;
-      }
-      return Number(val);
-    },
-    z.number().nullable().optional() // idfrais peut être un nombre ou null
-  ),
-  // datepaiement n'est pas un champ de formulaire car il est DEFAULT NOW()
+  status: z.enum(["pending", "processing", "success", "failed"], {
+    required_error: "Le statut est requis.",
+  }),
+
+  ideleve: z.coerce.number().optional(),
+  idfrais: z.coerce.number().optional(),
 });
 
 type PaiementFormValues = z.infer<typeof paiementFormSchema>;
@@ -96,16 +63,10 @@ export function PaiementForm({
   const form = useForm<PaiementFormValues>({
     resolver: zodResolver(paiementFormSchema),
     defaultValues: {
-      montantpayer: initialData?.montantpayer || 0,
-      status: initialData?.status || "pending",
-      ideleve:
-        initialData?.ideleve !== undefined && initialData.ideleve !== null
-          ? String(initialData.ideleve)
-          : "null_eleve_id", // Utilisez notre marqueur pour null
-      idfrais:
-        initialData?.idfrais !== undefined && initialData.idfrais !== null
-          ? String(initialData.idfrais)
-          : "null_frais_id", // Utilisez notre marqueur pour null
+      montantpayer: initialData?.montantpayer ?? 0,
+      status: initialData?.status ?? "pending", // Ne jamais laisser status undefined
+      ideleve: initialData?.ideleve ?? undefined,
+      idfrais: initialData?.idfrais ?? undefined,
     },
   });
 
@@ -114,19 +75,6 @@ export function PaiementForm({
     try {
       let result;
       const dataToSave = { ...values };
-
-      // Nettoyez les champs "null" des marqueurs avant d'envoyer à Supabase
-      if (dataToSave.ideleve === "null_eleve_id") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (dataToSave.ideleve as any) = null;
-      }
-      if (dataToSave.idfrais === "null_frais_id") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (dataToSave.idfrais as any) = null;
-      }
-
-      // 'datepaiement' est omis car géré par la DB. 'status' peut être envoyé si modifié.
-
       if (initialData) {
         // Mode édition
         result = await updatePaiement(

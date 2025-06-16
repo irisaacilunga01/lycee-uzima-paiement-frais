@@ -24,7 +24,7 @@ export type Notification = {
   idnotification: number;
   message: string;
   dateenvoi: string; // Représente un timestamp avec fuseau horaire
-  idparent: number | null;
+  idparent?: number;
 };
 
 /**
@@ -97,7 +97,7 @@ export type Anneescolaire = {
 export type Paiement = {
   idpaiement: number;
   montantpayer: number;
-  datepaiement: string; // Représente un timestamp avec fuseau horaire
+  datepaiement?: string; // Représente un timestamp avec fuseau horaire
   status: "pending" | "processing" | "success" | "failed"; // « en attente » | « en cours de traitement » | « réussite » | « échec »
   ideleve?: number;
   idfrais?: number;
