@@ -117,9 +117,11 @@ export function PaiementForm({
 
       // Nettoyez les champs "null" des marqueurs avant d'envoyer à Supabase
       if (dataToSave.ideleve === "null_eleve_id") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (dataToSave.ideleve as any) = null;
       }
       if (dataToSave.idfrais === "null_frais_id") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (dataToSave.idfrais as any) = null;
       }
 

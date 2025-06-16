@@ -3,7 +3,6 @@
 
 import { Anneescolaire, Classe, Eleve, Inscription, Option } from "@/type"; // Importe les types nécessaires
 import { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
 import { DataTable } from "./data-table";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
@@ -104,19 +103,8 @@ export function DashboardRecentActivity({
   initialRecentInscriptions,
   recentNumber,
 }: DashboardRecentActivityProps) {
-  const [recentInscriptions, setRecentInscriptions] = useState<
-    InscriptionDisplayForDashboard[]
-  >(initialRecentInscriptions);
-
-  // Note: Pour un tableau de bord, on n'a généralement pas besoin de Realtime updates complexes pour "l'activité récente".
-  // On rechargera la page ou les données manuellement/périodiquement si nécessaire.
-  // Cependant, si vous souhaitez des updates en temps réel pour ce tableau aussi,
-  // la logique serait similaire à celle de eleve-list-client, mais simplifiée pour les 5-10 dernières entrées.
-
-  // Pour cet exemple, nous nous basons sur les données initiales passées.
-  // Si vous voulez du temps réel ici, vous devrez ajouter un useEffect avec Supabase Realtime
-  // et des appels aux actions pour récupérer les données liées comme dans eleve-list-client.
-
+  const recentInscriptions =
+    initialRecentInscriptions as InscriptionDisplayForDashboard[];
   return (
     <div className="px-4 lg:px-6">
       <h3 className="text-xl font-semibold mb-4">

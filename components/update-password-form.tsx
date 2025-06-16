@@ -45,6 +45,7 @@ export function UpdatePasswordForm({
       // Redirection après succès, pour tous les rôles vers le tableau de bord principal
       router.push("/dashboard");
       router.refresh(); // Rafraîchit la session
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Gère les erreurs de mise à jour
       toast.error("Erreur de mise à jour du mot de passe", {

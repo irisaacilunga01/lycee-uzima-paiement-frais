@@ -87,9 +87,11 @@ export function ClasseForm({ initialData, options }: ClasseFormProps) {
 
       // Gérer spécifiquement idoption qui vient de Zod comme number | null
       if (dataToSave.idoption === "null_option_id") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (dataToSave.idoption as any) = null; // Zod va déjà transformer en number | null
       }
       if (dataToSave.niveau === "") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (dataToSave.niveau as any) = null;
       }
 

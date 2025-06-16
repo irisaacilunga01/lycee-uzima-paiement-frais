@@ -142,6 +142,7 @@ export function EleveForm({ initialData, parents }: EleveFormProps) {
       // Supprime les champs optionnels vides avant d'envoyer à Supabase
       Object.keys(dataToSave).forEach((key) => {
         if (dataToSave[key as keyof typeof dataToSave] === "") {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (dataToSave as any)[key] = null;
         }
       });

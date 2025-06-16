@@ -48,6 +48,7 @@ export function LoginForm({
       // Redirection vers le tableau de bord
       router.push("/dashboard");
       router.refresh(); // Rafraîchit les données
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Gère les erreurs de connexion
       setIsLoading(false);

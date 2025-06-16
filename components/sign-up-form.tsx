@@ -81,6 +81,7 @@ export function SignUpForm({
           "Veuillez vérifier votre e-mail pour confirmer votre compte.",
       });
       router.push("/auth/sign-up-success"); // Rediriger vers une page de succès pour informer l'utilisateur de la vérification email
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Gère les erreurs d'inscription
       toast.error("Erreur d'inscription", {

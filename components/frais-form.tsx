@@ -104,6 +104,7 @@ export function FraisForm({ initialData, anneescolaires }: FraisFormProps) {
         dataToSave.dateecheance = null;
       }
       if (dataToSave.idanneescolaire === "null_anneescolaire_id") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (dataToSave.idanneescolaire as any) = null;
       }
 

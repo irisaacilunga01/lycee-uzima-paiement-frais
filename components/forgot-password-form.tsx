@@ -49,6 +49,7 @@ export function ForgotPasswordForm({
         description:
           "Veuillez vérifier votre boîte de réception pour les instructions.",
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Gère les erreurs lors de l'envoi de l'e-mail de réinitialisation
       toast.error("Erreur d'envoi de l'e-mail", {
