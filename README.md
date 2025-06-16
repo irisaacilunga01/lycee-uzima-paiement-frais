@@ -1,5 +1,5 @@
-<a href="https://lycee-uzima.vercel.app/">
-  <img alt="Lycée UZIMA - Suivi Paiement Frais Scolaires" src="https://lycee-uzima.vercel.app/saacTech.png">
+<a href="https://lycee-uzima-paiement-frais.vercel.app/">
+  <img alt="Lycée UZIMA - Suivi Paiement Frais Scolaires" src="https://lycee-uzima-paiement-frais.vercel.app/saacTech.png">
   <h1 align="center">Lycée UZIMA – Application de gestion des frais scolaires</h1>
 </a>
 
