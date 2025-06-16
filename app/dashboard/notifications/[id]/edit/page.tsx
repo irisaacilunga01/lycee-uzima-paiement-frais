@@ -3,17 +3,16 @@ import { getNotificationById } from "@/app/actions/notifications";
 import { getParents } from "@/app/actions/parents";
 import { NotificationForm } from "@/components/notification-form"; // Assurez-vous que ce chemin est correct
 import { notFound } from "next/navigation";
-import { toast } from "sonner";
 
-interface EditNotificationPageProps {
-  params: {
-    id: string; // L'ID de la notification, sera une chaîne de caractères
-  };
-}
+type Params = Promise<{ id: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export default async function EditNotificationPage({
-  params,
-}: EditNotificationPageProps) {
+
+export default async function EditNotificationPage(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const params = await props.params;
   const idnotification = parseInt(params.id, 10); // Convertir l'ID de chaîne en nombre
 
   if (isNaN(idnotification)) {
@@ -23,29 +22,21 @@ export default async function EditNotificationPage({
   // Récupérer la notification spécifique
   const {
     data: notification,
-    error,
     success,
   } = await getNotificationById(idnotification);
 
   // Récupérer la liste des parents pour le sélecteur
   const {
     data: parents,
-    error: parentsError,
     success: parentsSuccess,
   } = await getParents();
 
   if (!success || !notification) {
-    toast.error(
-      error || "Notification non trouvée ou erreur lors de la récupération."
-    );
+
     notFound(); // Affiche la page 404 si la notification n'existe pas
   }
 
   if (!parentsSuccess || !parents) {
-    toast.error(
-      parentsError ||
-        "Impossible de charger la liste des parents pour la sélection."
-    );
     // Vous pouvez choisir de rediriger ou d'afficher un message d'erreur plus robuste ici
     return (
       <div className="container mx-auto pt-4">

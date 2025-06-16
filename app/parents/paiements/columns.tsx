@@ -106,7 +106,7 @@ export const paiementsColumns: ColumnDef<PaiementDisplay>[] = [
       );
     },
     cell: ({ row }) => {
-      return new Date(row.original.datepaiement).toLocaleDateString("fr-FR", {
+      return new Date(row.original?.datepaiement|| new Date()).toLocaleDateString("fr-FR", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -129,7 +129,7 @@ export const paiementsColumns: ColumnDef<PaiementDisplay>[] = [
     cell: ({ row }) => (
       <span
         className={`px-2 py-1 rounded-full text-xs font-semibold ${
-          row.original?.status === "completed"
+          row.original?.status === "success"
             ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
             : row.original.status === "pending"
             ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"

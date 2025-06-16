@@ -238,7 +238,7 @@ export const columns: ColumnDef<PaiementDisplay>[] = [
     },
     cell: ({ row }) => {
       const date = row.original.datepaiement;
-      return new Date(date).toLocaleString("fr-FR");
+      return new Date(date || new Date()).toLocaleString("fr-FR");
     },
   },
   {

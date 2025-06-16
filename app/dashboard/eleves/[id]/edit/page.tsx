@@ -3,15 +3,14 @@ import { getEleveById } from "@/app/actions/eleves";
 import { getParents } from "@/app/actions/parents";
 import { EleveForm } from "@/components/eleve-form"; // Assurez-vous que ce chemin est correct
 import { notFound } from "next/navigation";
-import { toast } from "sonner";
+type Params = Promise<{ id: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-interface EditElevePageProps {
-  params: {
-    id: string; // L'ID de l'élève, sera une chaîne de caractères
-  };
-}
-
-export default async function EditElevePage({ params }: EditElevePageProps) {
+export default async function EditElevePage(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const params = await props.params;
   const ideleve = parseInt(params.id, 10); // Convertir l'ID de chaîne en nombre
 
   if (isNaN(ideleve)) {
@@ -19,25 +18,16 @@ export default async function EditElevePage({ params }: EditElevePageProps) {
   }
 
   // Récupérer l'élève spécifique
-  const { data: eleve, error, success } = await getEleveById(ideleve);
+  const { data: eleve, success } = await getEleveById(ideleve);
 
   // Récupérer la liste des parents pour le sélecteur
-  const {
-    data: parents,
-    error: parentsError,
-    success: parentsSuccess,
-  } = await getParents();
+  const { data: parents, success: parentsSuccess } = await getParents();
 
   if (!success || !eleve) {
-    toast.error(error || "Élève non trouvé ou erreur lors de la récupération.");
     notFound(); // Affiche la page 404 si l'élève n'existe pas
   }
 
   if (!parentsSuccess || !parents) {
-    toast.error(
-      parentsError ||
-        "Impossible de charger la liste des parents pour la sélection."
-    );
     return (
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-bold mb-6">Éditer l&apos;Élève</h2>

@@ -2,14 +2,14 @@
 import { getOptionById } from "@/app/actions/options";
 import { OptionForm } from "@/components/option-form"; // Assurez-vous que ce chemin est correct
 import { notFound } from "next/navigation";
+type Params = Promise<{ id: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-interface EditOptionPageProps {
-  params: {
-    id: string; // L'ID de l'option, sera une chaîne de caractères
-  };
-}
-
-export default async function EditOptionPage({ params }: EditOptionPageProps) {
+export default async function EditOptionPage(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const params = await props.params;
   const idoption = parseInt(params.id, 10); // Convertir l'ID de chaîne en nombre
 
   if (isNaN(idoption)) {

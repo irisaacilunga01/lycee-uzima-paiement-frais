@@ -6,19 +6,19 @@ import { getEleves } from "@/app/actions/eleves";
 import { getInscriptionById } from "@/app/actions/inscriptions";
 import { InscriptionForm } from "@/components/inscription-form";
 import { notFound } from "next/navigation";
-import { toast } from "sonner";
 
-interface EditInscriptionPageProps {
-  params: {
-    ideleve: string;
-    idclasse: string;
-    idanneescolaire: string;
-  };
-}
+type Params = Promise<{
+  ideleve: string;
+  idclasse: string;
+  idanneescolaire: string;
+}>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export default async function EditInscriptionPage({
-  params,
-}: EditInscriptionPageProps) {
+export default async function EditInscriptionPage(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const params = await props.params;
   const ideleve = parseInt(params.ideleve, 10);
   const idclasse = parseInt(params.idclasse, 10);
   const idanneescolaire = parseInt(params.idanneescolaire, 10);
@@ -28,41 +28,24 @@ export default async function EditInscriptionPage({
   }
 
   // Récupérer l'inscription spécifique par sa clé composite
-  const {
-    data: inscription,
-    error,
-    success,
-  } = await getInscriptionById(ideleve, idclasse, idanneescolaire);
+  const { data: inscription, success } = await getInscriptionById(
+    ideleve,
+    idclasse,
+    idanneescolaire
+  );
 
   // Récupérer les listes pour les sélecteurs
-  const {
-    data: eleves,
-    error: elevesError,
-    success: elevesSuccess,
-  } = await getEleves();
-  const {
-    data: classes,
-    error: classesError,
-    success: classesSuccess,
-  } = await getClasses();
-  const {
-    data: anneescolaires,
-    error: anneescolairesError,
-    success: anneescolairesSuccess,
-  } = await getAnneescolaires();
+  const { data: eleves, success: elevesSuccess } = await getEleves();
+  const { data: classes, success: classesSuccess } = await getClasses();
+  const { data: anneescolaires, success: anneescolairesSuccess } =
+    await getAnneescolaires();
 
   if (!success || !inscription) {
-    toast.error(
-      error || "Inscription non trouvée ou erreur lors de la récupération."
-    );
     notFound();
   }
 
   // Gérer les erreurs de chargement des listes
   if (!elevesSuccess || !eleves) {
-    toast.error(
-      elevesError || "Impossible de charger la liste des élèves pour l'édition."
-    );
     return (
       <div className="container mx-auto pt-4">
         <h2 className="text-2xl font-bold mb-6">Éditer l&apos;Inscription</h2>
@@ -72,10 +55,6 @@ export default async function EditInscriptionPage({
   }
 
   if (!classesSuccess || !classes) {
-    toast.error(
-      classesError ||
-        "Impossible de charger la liste des classes pour l'édition."
-    );
     return (
       <div className="container mx-auto pt-4">
         <h2 className="text-2xl font-bold mb-6">Éditer l&apos;Inscription</h2>
@@ -85,10 +64,6 @@ export default async function EditInscriptionPage({
   }
 
   if (!anneescolairesSuccess || !anneescolaires) {
-    toast.error(
-      anneescolairesError ||
-        "Impossible de charger la liste des années scolaires pour l'édition."
-    );
     return (
       <div className="container mx-auto pt-4">
         <h2 className="text-2xl font-bold mb-6">Éditer l&apos;Inscription</h2>

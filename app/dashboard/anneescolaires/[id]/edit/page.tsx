@@ -1,19 +1,15 @@
-import { getAnneescolaireById } from "@/app/actions/anneescolaire"; // Assurez-vous que ce chemin est correct
+// app/anneescolaire/[id]/edit/page.tsx
+import { getAnneescolaireById } from "@/app/actions/anneescolaire";
 import { AnneescolaireForm } from "@/components/anneescolaire-form"; // Assurez-vous que ce chemin est correct
 import { notFound } from "next/navigation";
+type Params = Promise<{ id: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-// Mise à jour de l'interface pour inclure searchParams afin de satisfaire la contrainte PageProps
-// C'est le typage standard pour les pages Next.js dans le routeur App.
-interface EditAnneescolairePageProps {
-  params: {
-    id: string; // L'ID de l'année scolaire, sera une chaîne de caractères
-  };
-  searchParams?: { [key: string]: string | string[] | undefined }; // Ajouté pour satisfaire la contrainte PageProps
-}
-
-export default async function EditAnneescolairePage({
-  params,
-}: EditAnneescolairePageProps) {
+export default async function EditAnneescolairePage(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const params = await props.params;
   const idanneescolaire = parseInt(params.id, 10); // Convertir l'ID de chaîne en nombre
 
   if (isNaN(idanneescolaire)) {
@@ -29,7 +25,7 @@ export default async function EditAnneescolairePage({
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-6">Éditer l&apos;Année Scolaire</h2>
       {/* Passe les données de l'année scolaire existante au formulaire */}
       <AnneescolaireForm initialData={anneescolaire} />

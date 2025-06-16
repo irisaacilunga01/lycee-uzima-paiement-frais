@@ -2,28 +2,23 @@
 import { getParentById } from "@/app/actions/parents";
 import { ParentForm } from "@/components/parent-form"; // Assurez-vous que ce chemin est correct
 import { notFound } from "next/navigation"; // Import notFound pour gérer les cas où le parent n'existe pas
-import { toast } from "sonner"; // Import toast si vous voulez afficher des messages ici
+type Params = Promise<{ id: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-interface EditParentPageProps {
-  params: {
-    id: string; // L'ID du parent, sera une chaîne de caractères
-  };
-}
-
-export default async function EditParentPage({ params }: EditParentPageProps) {
+export default async function EditParentPage(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const params = await props.params;
   const idparent = parseInt(params.id, 10); // Convertir l'ID de chaîne en nombre
 
   if (isNaN(idparent)) {
     notFound(); // Si l'ID n'est pas un nombre valide, affiche une page 404
   }
 
-  const { data: parent, error, success } = await getParentById(idparent);
+  const { data: parent, success } = await getParentById(idparent);
 
   if (!success || !parent) {
-    // Si le parent n'est pas trouvé ou s'il y a une erreur, rediriger vers 404 ou afficher un message
-    toast.error(
-      error || "Parent non trouvé ou erreur lors de la récupération."
-    );
     notFound(); // Affiche la page 404 si le parent n'existe pas
   }
 
