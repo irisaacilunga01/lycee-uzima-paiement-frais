@@ -1,14 +1,12 @@
 // app/paiement/page.tsx
 import { getPaiements } from "@/app/actions/paiement"; // Utilisez le fichier d'actions spécifique
-import { toast } from "sonner";
 import { PaiementListClient } from "./paiement-list-client"; // Importez le nouveau composant client
 
 export default async function PaiementPage() {
   // Récupération initiale des données côté serveur avec les infos liées
-  const { data: paiements, error, success } = await getPaiements();
+  const { data: paiements, success } = await getPaiements();
 
   if (!success) {
-    toast.error(error || "Erreur lors du chargement initial des paiements.");
     return (
       <div className="container mx-auto pt-4">
         <h2 className="text-2xl font-bold mb-6">Liste des Paiements</h2>

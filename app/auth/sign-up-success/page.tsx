@@ -23,7 +23,15 @@ export default function Page() {
             <CardContent>
               <p className="text-sm text-muted-foreground">
                 Vous vous êtes inscrit(e) avec succès. Veuillez vérifier votre
-                e-mail pour confirmer votre compte avant de vous connecter.
+                boite e-mail pour confirmer votre compte avant de vous
+                connecter, en appuyant sur{" "}
+                <Link
+                  href="https://mail.google.com/"
+                  className="text-blue-600 hover:text-blue-400 hover:underline"
+                >
+                  confirm email
+                </Link>{" "}
+                depuis supabase
               </p>
             </CardContent>
           </Card>

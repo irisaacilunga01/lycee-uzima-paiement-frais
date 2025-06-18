@@ -1,5 +1,3 @@
-// app/classe/page.tsx
-import { toast } from "sonner";
 import { getClasses } from "../../actions/classes";
 import { ClasseListClient } from "./classe-list-client"; // Importez le nouveau composant client
 
@@ -8,7 +6,6 @@ export default async function ClassePage() {
   const { data: classes, error, success } = await getClasses();
 
   if (!success) {
-    toast.error(error || "Erreur lors du chargement initial des classes.");
     return (
       <div className="container mx-auto pt-4">
         <h2 className="text-2xl font-bold mb-6">Liste des Classes</h2>
