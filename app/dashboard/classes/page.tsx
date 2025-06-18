@@ -3,7 +3,7 @@ import { ClasseListClient } from "./classe-list-client"; // Importez le nouveau 
 
 export default async function ClassePage() {
   // Récupération initiale des données côté serveur avec les infos de l'option
-  const { data: classes, error, success } = await getClasses();
+  const { data: classes, success } = await getClasses();
 
   if (!success) {
     return (

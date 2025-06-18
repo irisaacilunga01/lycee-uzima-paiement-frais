@@ -4,7 +4,7 @@ import { EleveListClient } from "./eleve-list-client";
 
 export default async function ElevePage() {
   // Récupération initiale des données côté serveur avec le nom du parent
-  const { data: eleves, error, success } = await getEleves();
+  const { data: eleves, success } = await getEleves();
 
   if (!success) {
     return (

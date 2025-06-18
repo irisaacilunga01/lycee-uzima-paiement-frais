@@ -3,7 +3,7 @@ import { FraisListClient } from "./frais-list-client"; // Importez le nouveau co
 
 export default async function FraisPage() {
   // Récupération initiale des données côté serveur avec les infos de l'année scolaire
-  const { data: frais, error, success } = await getFrais();
+  const { data: frais, success } = await getFrais();
 
   if (!success) {
     return (
